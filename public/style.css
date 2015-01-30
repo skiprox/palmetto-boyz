@@ -507,13 +507,14 @@ body {
   list-style:none;
 }
 .message-list li {
-  padding:10px 20px 10px 30px;
+  padding:10px 20px 10px 40px;
   position:relative;
 }
 .message-list li:before {
   position:absolute;
   left:10px;
   content:'>';
+  color:#999;
   font-weight:bold;
 }
 .message-list li:nth-child(even) {
