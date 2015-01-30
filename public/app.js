@@ -15,3 +15,11 @@ socket.on('chat message', function(msg) {
 	}
 	$('html, body').animate({scrollTop: $('body').height()}, 200);
 });
+socket.on('user joined', function(hasJoined) {
+	if (hasJoined) {
+		$('#messages').append($('<li class="room-activity">').text('[A USER HAS JOINED]'));
+	}
+	else {
+		$('#messages').append($('<li class="room-activity">').text('[A USER HAS LEFT]'));
+	}
+})

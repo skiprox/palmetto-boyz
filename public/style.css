@@ -513,11 +513,14 @@ img {
   padding:10px 20px 10px 40px;
   position:relative;
 }
+.message-list li.room-activity {
+  color:#999;
+}
 .message-list li:before {
   position:absolute;
   left:10px;
   content:'>';
-  color:#999;
+  color:#aaa;
   font-weight:bold;
 }
 .message-list li:nth-child(even) {
