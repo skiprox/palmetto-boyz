@@ -541,9 +541,17 @@ img {
   box-sizing:border-box;
 }
 .form__button {
-  width:8%;
+  width:10%;
   display:block;
   float:left;
   padding:0;
   padding:7px;
+}
+@media (max-width: 680px) {
+  .form__button {
+    display:none;
+  }
+  .form__input {
+    width:100%;
+  }
 }

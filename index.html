@@ -26,7 +26,7 @@
 			if (msgEnding === 'jpg' || msgEnding === 'jpeg' || msgEnding === 'png' || msgEnding === 'gif') {
 				$('#messages').append($('<li><img src="' + msg + '"></li>'));
 			}
-			else {
+			else if (msg !== '') {
 				$('#messages').append($('<li>').text(msg));
 			}
 			$('html, body').animate({scrollTop: $('body').height()}, 200);
