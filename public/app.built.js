@@ -5121,10 +5121,10 @@ APP.Application = (function(){
 				$('#messages').append($('<li><img src="' + msg + '"></li>'));
 			}
 			else if (msg.match(/quote/gi) !== null) {
-				$('#messages').append($('<li>').text(runningMan.quote()));
+				$('#messages').append($('<li class="arnold">').text(runningMan.quote()));
 			}
 			else if (msg.match(/face/gi) !== null) {
-				$('#messages').append($('<li>').text(faces()));
+				$('#messages').append($('<li class="face">').text(faces()));
 			}
 			else if (msg !== '') {
 				$('#messages').append($('<li>').text(msg));

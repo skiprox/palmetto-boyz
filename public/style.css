@@ -516,6 +516,10 @@ img {
 .message-list li.room-activity {
   color:#999;
 }
+.message-list li.arnold, .message-list li.face {
+  font-size:2em;
+  font-weight:bold;
+}
 .message-list li:before {
   position:absolute;
   left:10px;
