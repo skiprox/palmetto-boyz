@@ -5070,11 +5070,15 @@ var quotes = [
 
 var RunningMan = (function() {
 
+	var getRandomQuote = function() {
+		var quotesLen = quotes.length,
+			randomQuote = quotes[Math.floor(Math.random() * quotesLen)];
+		return randomQuote;
+	}
+
 	return {
 		quote: function() {
-			var quotesLen = quotes.length;
-			var randomQuote = quotes[Math.floor(Math.random() * quotesLen)];
-			return randomQuote;
+			return getRandomQuote();
 		},
 		stream: function() {
 			return spigot(quotes);
