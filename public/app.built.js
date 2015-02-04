@@ -5096,38 +5096,56 @@ var faces = require('cool-ascii-faces');
 
 APP.Application = (function(){
 
-	$('form').submit(function() {
-		socket.emit('chat message', $('#message').val());
-		$('#message').val('');
-		return false;
-	});
+	var _initialize = function() {
+		_addDomListeners();
+		_addSocketListeners();
+	};
 
-	socket.on('chat message', function(msg) {
-		var msgArray = msg.split('.'),
-			msgEnding = msgArray[msgArray.length - 1];
-		if (msgEnding === 'jpg' || msgEnding === 'jpeg' || msgEnding === 'png' || msgEnding === 'gif') {
-			$('#messages').append($('<li><img src="' + msg + '"></li>'));
-		}
-		else if (msg.match(/quote/gi) !== null) {
-			$('#messages').append($('<li>').text(runningMan.quote()));
-		}
-		else if (msg.match(/face/gi) !== null) {
-			$('#messages').append($('<li>').text(faces()));
-		}
-		else if (msg !== '') {
-			$('#messages').append($('<li>').text(msg));
-		}
-		$('html, body').animate({scrollTop: $('body').height()}, 200);
-	});
+	var _addDomListeners = function() {
+		$('form').submit(function() {
+			socket.emit('chat message', $('#message').val());
+			$('#message').val('');
+			return false;
+		});
+	};
 
-	socket.on('user joined', function(hasJoined) {
-		if (hasJoined) {
-			$('#messages').append($('<li class="room-activity">').text('[A USER HAS JOINED]'));
+	var _addSocketListeners = function() {
+		socket.on('chat message', function(msg) {
+			var msgArray = msg.split('.'),
+				msgEnding = msgArray[msgArray.length - 1];
+			if (msgEnding === 'jpg' || msgEnding === 'jpeg' || msgEnding === 'png' || msgEnding === 'gif') {
+				$('#messages').append($('<li><img src="' + msg + '"></li>'));
+			}
+			else if (msg.match(/quote/gi) !== null) {
+				$('#messages').append($('<li>').text(runningMan.quote()));
+			}
+			else if (msg.match(/face/gi) !== null) {
+				$('#messages').append($('<li>').text(faces()));
+			}
+			else if (msg !== '') {
+				$('#messages').append($('<li>').text(msg));
+			}
+			$('html, body').animate({scrollTop: $('body').height()}, 200);
+		});
+
+		socket.on('user joined', function(obj) {
+			if (obj.didJoin) {
+				$('#messages').append($('<li class="room-activity">').text('[A USER HAS JOINED]'));
+			}
+			else {
+				$('#messages').append($('<li class="room-activity">').text('[A USER HAS LEFT]'));
+			}
+		});
+	};
+
+	return {
+		initialize : function() {
+			_initialize();
+			return this;
 		}
-		else {
-			$('#messages').append($('<li class="room-activity">').text('[A USER HAS LEFT]'));
-		}
-	});
+	};
 
 })();
+
+APP.Application.initialize();
 },{"cool-ascii-faces":1,"running-man":27}]},{},[30]);
