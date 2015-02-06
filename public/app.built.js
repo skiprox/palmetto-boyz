@@ -5115,6 +5115,7 @@ APP.Application = (function(){
 
 	var _addSocketListeners = function() {
 		socket.on('chat message', function(msg) {
+			_printMessage(msg);
 			var msgArray = msg.split('.'),
 				msgEnding = msgArray[msgArray.length - 1];
 			if (msgEnding === 'jpg' || msgEnding === 'jpeg' || msgEnding === 'png' || msgEnding === 'gif') {
@@ -5125,9 +5126,6 @@ APP.Application = (function(){
 			}
 			else if (msg.match(/face/gi) !== null) {
 				$('#messages').append($('<li class="face">').text(faces()));
-			}
-			else if (msg !== '') {
-				$('#messages').append($('<li>').text(msg));
 			}
 			$('html, body').animate({scrollTop: $('body').height()}, 200);
 		});
@@ -5141,6 +5139,12 @@ APP.Application = (function(){
 			}
 		});
 	};
+
+	var _printMessage = function(msg) {
+		if (msg !== '') {
+			$('#messages').append($('<li>').text(msg));
+		}
+	}
 
 	return {
 		initialize : function() {
