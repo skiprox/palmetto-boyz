@@ -9,7 +9,7 @@
   "dependencies": {
     "express": "4.10.2",
     "socket.io": "~1.3.2",
-    "running-man": "~0.1.2",
+    "running-man": "~0.1.3",
     "grunt": "~0.4.5",
     "cool-ascii-faces": "~1.3.3"
   },
