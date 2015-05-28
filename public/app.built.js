@@ -5220,10 +5220,10 @@ APP.Application = (function(){
 			if (msgEnding === 'jpg' || msgEnding === 'jpeg' || msgEnding === 'png' || msgEnding === 'gif') {
 				$('#messages').append($('<li><img src="' + msg + '"></li>'));
 			}
-			else if (msg.match(/quote/gi) !== null) {
+			else if (msg.match(/\barnold\b/) !== null) {
 				$('#messages').append($('<li class="arnold">').text(runningMan.quote()));
 			}
-			else if (msg.match(/face/gi) !== null) {
+			else if (msg.match(/\bface\b/) !== null) {
 				$('#messages').append($('<li class="face">').text(faces()));
 			}
 			$('html, body').animate({scrollTop: $('body').height()}, 200);
@@ -5232,10 +5232,10 @@ APP.Application = (function(){
 		socket.on('user joined', function(obj) {
 			console.log(obj);
 			if (obj.didJoin) {
-				$('#messages').append($('<li class="room-activity">').text('[A USER HAS JOINED]'));
+				$('#messages').append($('<li class="room-activity">').text('[A user has joined (' + obj.users + ' in room)]'));
 			}
 			else {
-				$('#messages').append($('<li class="room-activity">').text('[A USER HAS LEFT]'));
+				$('#messages').append($('<li class="room-activity">').text('[A user has left (' + obj.users + ' in room)]'));
 			}
 		});
 	};

@@ -515,6 +515,7 @@ img {
 }
 .message-list li.room-activity {
   color:#999;
+  text-transform:uppercase;
 }
 .message-list li.arnold, .message-list li.face {
   font-size:2em;
