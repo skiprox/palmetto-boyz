@@ -12,9 +12,11 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
+  userCount++;
   console.log('a user connected');
   io.emit('user joined', {didJoin : true, users : userCount});
   socket.on('disconnect', function() {
+    userCount--;
   	console.log('user disconnected');
   	io.emit('user joined', {didJoin : false, users : userCount});
   });

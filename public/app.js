@@ -36,6 +36,7 @@ APP.Application = (function(){
 		});
 
 		socket.on('user joined', function(obj) {
+			console.log(obj);
 			if (obj.didJoin) {
 				$('#messages').append($('<li class="room-activity">').text('[A USER HAS JOINED]'));
 			}
