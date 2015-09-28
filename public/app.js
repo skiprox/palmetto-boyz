@@ -1,9 +1,8 @@
-var APP = APP || {};
 var socket = io();
 var runningMan = require('running-man');
 var faces = require('cool-ascii-faces');
 
-APP.Application = (function(){
+Public = (function(){
 
 	var _initialize = function() {
 		_addDomListeners();
