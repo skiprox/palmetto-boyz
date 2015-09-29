@@ -20,9 +20,12 @@ img {
 .message {
   padding: 0.4em 0.8em 0;
   line-height: 1.5;
+  font-weight: 100;
   &.notification {
     text-align:center;
     color: #999;
+    font-size: 16px;
+    font-weight: 100;
     &--total-number {
       padding-top: 0;
     }
@@ -39,41 +42,41 @@ img {
 * 
 *********************/
 .form {
-  width:100%;
-  position:fixed;
-  bottom:0;
-  left:0;
-  background:#333745;
-  padding:5px;
-  box-sizing:border-box;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: #333745;
+  padding: 5px;
+  box-sizing: border-box;
   &__input {
     font-size: 24px;
-    width:90%;
-    display:block;
-    float:left;
-    padding:0;
-    padding:7px;
+    width: 90%;
+    display: block;
+    float: left;
+    padding: 0;
+    padding: 7px;
     background-color: #ECF0F1;
-    border:none;
-    box-sizing:border-box;
+    border: none;
+    box-sizing: border-box;
     outline: none !important;
   }
   &__button {
     font-size: 24px;
-    width:10%;
-    display:block;
-    float:left;
-    padding:7px;
+    width: 10%;
+    display: block;
+    float: left;
+    padding: 7px;
     background-color: #77C4D3;
     color: white;
-    border:none;
+    border: none;
   }
 }
 @media (max-width: 680px) {
   .form__button {
-    display:none;
+    display: none;
   }
   .form__input {
-    width:100%;
+    width: 100%;
   }
 }
