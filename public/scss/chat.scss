@@ -1,0 +1,57 @@
+/********************
+*
+*    CHAT BODY
+* 
+*********************/
+body {
+  background:#fafafa;
+  color:#333;
+  font-size:24px;
+}
+img {
+  max-width:100%;
+}
+.message-list {
+  position:relative;
+  margin:0 0 60px 0;
+  padding:0;
+  list-style:none;
+}
+
+/********************
+*
+*    CHAT FORM
+* 
+*********************/
+.form {
+  width:100%;
+  position:fixed;
+  bottom:0;
+  left:0;
+  background:#333;
+  padding:5px;
+  box-sizing:border-box;
+}
+.form__input {
+  width:90%;
+  display:block;
+  float:left;
+  padding:0;
+  padding:5px;
+  box-sizing:border-box;
+}
+.form__button {
+  width:10%;
+  display:block;
+  float:left;
+  padding:0;
+  padding:7px;
+}
+@media (max-width: 680px) {
+  .form__button {
+    display:none;
+  }
+  .form__input {
+    width:100%;
+  }
+}

@@ -21,9 +21,11 @@ var App = (function() {
       // We haven't added the user yet
       var addedUser = false;
 
+      socket.username = socket.username || 'Greg';
+
       // Add listener for new messages
       socket.on('new message', function(data) {
-        socket.broadcast.emit('new message', {
+        socket.emit('new message', {
           username: socket.username,
           message: data
         });
@@ -41,7 +43,7 @@ var App = (function() {
           userCount: userCount
         });
         // echo globally that a person has connected
-        socket.broadcast.emit('user joined', {
+        socket.emit('user joined', {
           username: socket.username,
           userCount: userCount
         });
@@ -49,14 +51,14 @@ var App = (function() {
 
       // Add listener for typing
       socket.on('typing', function() {
-        socket.broadcast.emi('typing', {
+        socket.emit('typing', {
           username: socket.username
         });
       });
 
       // Add listener for stopping typing
       socket.on('stop typing', function() {
-        socket.broadcast.emit('stop typing', {
+        socket.emit('stop typing', {
           username: socket.username
         });
       });
@@ -68,7 +70,7 @@ var App = (function() {
           delete usernames[socket.username];
           userCount--;
           // Echo globally that user has left
-          socket.broadcast.emit('user left', {
+          socket.emit('user left', {
             username: socket.username,
             userCount: userCount
           });

@@ -1,21 +1,42 @@
 module.exports = function(grunt) {
 
+	require('load-grunt-tasks')(grunt);
+
 	//Project configuration.
 	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
 		browserify: {
-			dist: {
-				files: {
-					'public/app.built.js': ['public/app.js']
-				}
-			}
-		}
+      dev: {
+        options: {
+          debug: true
+        },
+        files:{
+          'public/app.built.js' : 'public/app.js'
+        }
+      }
+    },
+    sass: {
+      dist: {
+        options: {
+          style: 'expanded'
+        },
+        files: {
+          'public/css/screen.css': 'public/scss/screen.scss'
+        }
+      }
+    },
+		watch: {
+      js: {
+        files: ['public/app.js'],
+        tasks: ['browserify:dev']
+      },
+      css: {
+        files: ['public/scss/*.scss'],
+        tasks: ['sass']
+      }
+    }
 	});
 
-	//Load plugins.
-	grunt.loadNpmTasks('grunt-browserify');
-
 	//Task(s).
-	grunt.registerTask('default', ['browserify']);
+	grunt.registerTask('default', ['browserify', 'sass']);
 
 }
