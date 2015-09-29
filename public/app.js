@@ -91,10 +91,6 @@ Public = (function(){
 	 * @param {Object} -- includes data.username and data.message
 	 */
 	var addChatMessage = function(data) {
-		console.log(TextCombing.hasImage(data.message));
-		if (TextCombing.hasImage(data.message)) {
-			console.log('WE GOT AN IMAGE');
-		}
 		var color = userColors[data.usernumber % (colorsLen)];
 		var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
 		UI.messages.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
