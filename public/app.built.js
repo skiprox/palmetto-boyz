@@ -1,5 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var socket = io();
+var TextCombing = require('./modules/text-combing');
 
 Public = (function(){
 
@@ -91,8 +92,13 @@ Public = (function(){
 	 * @param {Object} -- includes data.username and data.message
 	 */
 	var addChatMessage = function(data) {
-		var color = userColors[data.usernumber % (colorsLen)]
-		UI.messages.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + data.message + '</li>';
+		console.log(TextCombing.hasImage(data.message));
+		if (TextCombing.hasImage(data.message)) {
+			console.log('WE GOT AN IMAGE');
+		}
+		var color = userColors[data.usernumber % (colorsLen)];
+		var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
+		UI.messages.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
 	};
 
 	return {
@@ -105,4 +111,29 @@ Public = (function(){
 })();
 
 Public.init();
+},{"./modules/text-combing":2}],2:[function(require,module,exports){
+'use strict';
+
+var TextCombing = (function() {
+
+	var checkForImage = function(text) {
+		var splitArray = text.split('.');
+		var lastString = splitArray[splitArray.length - 1];
+		if (lastString == 'png' || lastString == 'jpg' || lastString == 'jpeg' || lastString == 'gif') {
+			return true;
+		}
+		else {
+			return false;
+		}
+	};
+
+	return {
+		hasImage: function(text) {
+			return checkForImage(text);
+		}
+	}
+
+}());
+
+module.exports = TextCombing;
 },{}]},{},[1]);
