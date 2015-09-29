@@ -10,9 +10,6 @@ Public = (function(){
 		],
 		colorsLen 	= userColors.length;
 
-	// User variables to keep track of
-	var totalUsers = 0;
-
 	var _initialize = function() {
 		_addDomListeners();
 		_addSocketListeners();
@@ -36,26 +33,22 @@ Public = (function(){
 
 	var _addSocketListeners = function() {
 		socket.on('user joined', function(data) {
-			userJoined(data);
+			groupChangeNotification(data, 'joined');
 		});
 		socket.on('user left', function(data) {
-			userLeft(data);
+			groupChangeNotification(data, 'left');
 		});
 		socket.on('new message', function(data) {
 			addChatMessage(data);
 		});
 	};
 
-	var userJoined = function(data) {
-		totalUsers++;
-	};
-
-	var userLeft = function(data) {
-		totalUsers--;
+	var groupChangeNotification = function(data, infoString) {
+		$('#messages').append('<li class="message notification">' + data.username + ' has ' + infoString + ' the group.' + '</li>');
+		$('#messages').append('<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group</li>');
 	};
 
 	var addChatMessage = function(data) {
-		console.log(data);
 		var message = data.message;
 		var user = data.username;
 		var number = data.usernumber;

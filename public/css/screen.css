@@ -106,6 +106,10 @@ img {
 .message {
   padding: 0.8em 0.8em 0;
 }
+.message.notification {
+  text-align: center;
+  color: #999;
+}
 
 .user {
   font-weight: bold;
