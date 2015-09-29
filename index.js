@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
+var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
 var App = (function() {
@@ -23,9 +23,11 @@ var App = (function() {
 
       socket.username = socket.username || 'Greg';
 
+      console.log('index.js, connection');
       // Add listener for new messages
       socket.on('new message', function(data) {
-        socket.emit('new message', {
+        console.log('index.js, new message');
+        socket.broadcast.emit('new message', {
           username: socket.username,
           message: data
         });
@@ -33,6 +35,7 @@ var App = (function() {
 
       // Add listener for added user
       socket.on('add user', function(username) {
+        console.log('index.js, add user');
         // Store the usernmae in the socket session for this client
         socket.username = username;
         // Add the username to the global list
@@ -43,7 +46,7 @@ var App = (function() {
           userCount: userCount
         });
         // echo globally that a person has connected
-        socket.emit('user joined', {
+        socket.broadcast.emit('user joined', {
           username: socket.username,
           userCount: userCount
         });
@@ -51,26 +54,27 @@ var App = (function() {
 
       // Add listener for typing
       socket.on('typing', function() {
-        socket.emit('typing', {
+        socket.broadcast.emit('typing', {
           username: socket.username
         });
       });
 
       // Add listener for stopping typing
       socket.on('stop typing', function() {
-        socket.emit('stop typing', {
+        socket.broadcast.emit('stop typing', {
           username: socket.username
         });
       });
 
       // Add listener for user disconnect
       socket.on('disconnect', function() {
+        console.log('index.js, disconnect');
         // remove the username from the global usernames list
         if (addedUser) {
           delete usernames[socket.username];
           userCount--;
           // Echo globally that user has left
-          socket.emit('user left', {
+          socket.broadcast.emit('user left', {
             username: socket.username,
             userCount: userCount
           });

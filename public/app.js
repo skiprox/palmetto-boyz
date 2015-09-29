@@ -1,6 +1,4 @@
 var socket = io();
-var runningMan = require('running-man');
-var faces = require('cool-ascii-faces');
 
 Public = (function(){
 
@@ -24,11 +22,14 @@ Public = (function(){
 	};
 
 	var _addSocketListeners = function() {
-		socket.on('new message', function(data) {
-			addChatMessage(data);
-		});
 		socket.on('user joined', function(data) {
 			newUser(data);
+		});
+		socket.on('user left', function(data) {
+			userLeft(data);
+		});
+		socket.on('new message', function(data) {
+			addChatMessage(data);
 		});
 	};
 
@@ -38,6 +39,9 @@ Public = (function(){
 
 	var addChatMessage = function(data) {
 		console.log(data);
+		var message = data.message;
+		var user = data.username;
+		$('#messages').append('<li><span class="user">' + user + '</span> ' + message + '</li>');
 	};
 
 	return {
