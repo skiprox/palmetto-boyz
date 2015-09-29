@@ -27,7 +27,7 @@ var App = (function() {
       // Add listener for new messages
       socket.on('new message', function(data) {
         console.log('index.js, new message');
-        socket.broadcast.emit('new message', {
+        io.emit('new message', {
           username: socket.username,
           message: data
         });
@@ -42,11 +42,11 @@ var App = (function() {
         usernames[username] = username;
         userCount++;
         addedUser = true;
-        socket.emit('login', {
+        io.emit('login', {
           userCount: userCount
         });
         // echo globally that a person has connected
-        socket.broadcast.emit('user joined', {
+        io.emit('user joined', {
           username: socket.username,
           userCount: userCount
         });
@@ -54,14 +54,14 @@ var App = (function() {
 
       // Add listener for typing
       socket.on('typing', function() {
-        socket.broadcast.emit('typing', {
+        io.emit('typing', {
           username: socket.username
         });
       });
 
       // Add listener for stopping typing
       socket.on('stop typing', function() {
-        socket.broadcast.emit('stop typing', {
+        io.emit('stop typing', {
           username: socket.username
         });
       });
@@ -74,7 +74,7 @@ var App = (function() {
           delete usernames[socket.username];
           userCount--;
           // Echo globally that user has left
-          socket.broadcast.emit('user left', {
+          io.emit('user left', {
             username: socket.username,
             userCount: userCount
           });

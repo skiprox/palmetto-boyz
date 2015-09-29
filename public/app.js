@@ -23,7 +23,7 @@ Public = (function(){
 
 	var _addSocketListeners = function() {
 		socket.on('user joined', function(data) {
-			newUser(data);
+			userJoined(data);
 		});
 		socket.on('user left', function(data) {
 			userLeft(data);
@@ -33,7 +33,7 @@ Public = (function(){
 		});
 	};
 
-	var newUser = function(data) {
+	var userJoined = function(data) {
 		console.log(data);
 	};
 
