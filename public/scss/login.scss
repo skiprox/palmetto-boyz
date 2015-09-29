@@ -9,11 +9,11 @@
 	height: 100%;
 	top: 0;
 	left: 0;
-	z-index:1;
-	background-color: #222;
+	z-index: 1;
+	background-color: #333745;
 	&__wrapper {
 		width: 90%;
-		position:absolute;
+		position: absolute;
 		top: 50%;
 		left: 5%;
 		transform: translateY(-50%);
@@ -21,9 +21,9 @@
 	&__label {
 		font-size: 80px;
 		color: #fafafa;
-		text-align:center;
+		text-align: center;
 		text-transform: lowercase;
-		display:block;
+		display: block;
 	}
 	&__username {
 		background-color: transparent;
@@ -33,7 +33,7 @@
 		padding-top: 15px;
 		text-align: center;
 		width: 80%;
-		display:block; 
+		display: block; 
 		margin: 0 auto;
 		color: #fafafa;
 		font-size: 80px;

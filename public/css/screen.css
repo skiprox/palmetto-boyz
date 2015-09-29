@@ -50,7 +50,7 @@ table {
   top: 0;
   left: 0;
   z-index: 1;
-  background-color: #222;
+  background-color: #333745;
 }
 .login__wrapper {
   width: 90%;
@@ -106,10 +106,13 @@ img {
 .message {
   padding: 0.4em 0.8em 0;
   line-height: 1.5;
+  font-weight: 100;
 }
 .message.notification {
   text-align: center;
   color: #999;
+  font-size: 16px;
+  font-weight: 100;
 }
 .message.notification--total-number {
   padding-top: 0;
@@ -130,7 +133,7 @@ img {
   position: fixed;
   bottom: 0;
   left: 0;
-  background: #333745;
+  background-color: #333745;
   padding: 5px;
   box-sizing: border-box;
 }
