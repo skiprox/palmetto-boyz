@@ -1,59 +1,62 @@
-var APP = APP || {};
 var socket = io();
-var runningMan = require('running-man');
-var faces = require('cool-ascii-faces');
 
-APP.Application = (function(){
+Public = (function(){
+
+	// Colors for users
+	var userColors 	=  [
+		'#e21400', '#91580f', '#f8a700', '#f78b00',
+		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+		'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+		],
+		colorsLen 	= userColors.length;
 
 	var _initialize = function() {
 		_addDomListeners();
 		_addSocketListeners();
+		$('#login-name').select();
 	};
 
 	var _addDomListeners = function() {
-		$('form').submit(function() {
-			socket.emit('chat message', $('#message').val());
+		$('#chat-form').submit(function() {
+			socket.emit('new message', $('#message').val());
 			$('#message').val('');
+			return false;
+		});
+		$('#login-form').submit(function() {
+			socket.emit('add user', $('#login-name').val());
+			$('#login-name').val('');
+			$('#login-form').remove();
+			$('#message').select();
 			return false;
 		});
 	};
 
 	var _addSocketListeners = function() {
-		socket.on('chat message', function(msg) {
-			_printMessage(msg);
-			var msgArray = msg.split('.'),
-				msgEnding = msgArray[msgArray.length - 1];
-			if (msgEnding === 'jpg' || msgEnding === 'jpeg' || msgEnding === 'png' || msgEnding === 'gif') {
-				$('#messages').append($('<li><img src="' + msg + '"></li>'));
-			}
-			else if (msg.match(/\barnold\b/) !== null) {
-				$('#messages').append($('<li class="arnold">').text(runningMan.quote()));
-			}
-			else if (msg.match(/\bface\b/) !== null) {
-				$('#messages').append($('<li class="face">').text(faces()));
-			}
-			$('html, body').animate({scrollTop: $('body').height()}, 200);
+		socket.on('user joined', function(data) {
+			groupChangeNotification(data, 'joined');
 		});
-
-		socket.on('user joined', function(obj) {
-			console.log(obj);
-			if (obj.didJoin) {
-				$('#messages').append($('<li class="room-activity">').text('[A user has joined (' + obj.users + ' in room)]'));
-			}
-			else {
-				$('#messages').append($('<li class="room-activity">').text('[A user has left (' + obj.users + ' in room)]'));
-			}
+		socket.on('user left', function(data) {
+			groupChangeNotification(data, 'left');
+		});
+		socket.on('new message', function(data) {
+			addChatMessage(data);
 		});
 	};
 
-	var _printMessage = function(msg) {
-		if (msg !== '') {
-			$('#messages').append($('<li>').text(msg));
-		}
-	}
+	var groupChangeNotification = function(data, infoString) {
+		$('#messages').append('<li class="message notification">' + data.username + ' has ' + infoString + ' the group.' + '</li>');
+		$('#messages').append('<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group</li>');
+	};
+
+	var addChatMessage = function(data) {
+		var message = data.message;
+		var user = data.username;
+		var number = data.usernumber;
+		$('#messages').append('<li class="message"><span class="user" style="color:' + userColors[number % (colorsLen)] + '">' + user + '</span> ' + message + '</li>');
+	};
 
 	return {
-		initialize : function() {
+		init : function() {
 			_initialize();
 			return this;
 		}
@@ -61,4 +64,4 @@ APP.Application = (function(){
 
 })();
 
-APP.Application.initialize();
+Public.init();

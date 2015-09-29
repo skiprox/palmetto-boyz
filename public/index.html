@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Pametto Boyz</title>
-	<link rel="stylesheet" href="style.css">
+	<title>Palmetto Boyz</title>
+	<link rel="stylesheet" href="css/screen.css">
 </head>
 <body>
+	<form action="" id="login-form" class="login">
+		<div class="login__wrapper">
+			<label class="login__label" for="login-name">Please enter a name</label>
+			<input type="text" id="login-name" class="login__username" autocomplete="off">
+		</div>
+	</form>
 	<ul id="messages" class="message-list"></ul>
-	<form action="" class="form">
+	<form id="chat-form" action="" class="form">
 		<input type="text" id="message" class="form__input" autocomplete="off">
 		<button class="form__button">Send</button>
 	</form>
