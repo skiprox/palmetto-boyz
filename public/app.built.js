@@ -3,9 +3,21 @@ var socket = io();
 
 Public = (function(){
 
+	// Colors for users
+	var userColors 	=  [
+		'#e21400', '#91580f', '#f8a700', '#f78b00',
+		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+		'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+		],
+		colorsLen 	= userColors.length;
+
+	// User variables to keep track of
+	var totalUsers = 0;
+
 	var _initialize = function() {
 		_addDomListeners();
 		_addSocketListeners();
+		$('#login-name').select();
 	};
 
 	var _addDomListeners = function() {
@@ -18,6 +30,7 @@ Public = (function(){
 			socket.emit('add user', $('#login-name').val());
 			$('#login-name').val('');
 			$('#login-form').remove();
+			$('#message').select();
 			return false;
 		});
 	};
@@ -35,14 +48,19 @@ Public = (function(){
 	};
 
 	var userJoined = function(data) {
-		console.log(data);
+		totalUsers++;
+	};
+
+	var userLeft = function(data) {
+		totalUsers--;
 	};
 
 	var addChatMessage = function(data) {
 		console.log(data);
 		var message = data.message;
 		var user = data.username;
-		$('#messages').append('<li><span class="user">' + user + '</span> ' + message + '</li>');
+		var number = data.usernumber;
+		$('#messages').append('<li class="message"><span class="user" style="color:' + userColors[number % (colorsLen)] + '">' + user + '</span> ' + message + '</li>');
 	};
 
 	return {

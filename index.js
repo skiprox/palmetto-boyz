@@ -29,6 +29,7 @@ var App = (function() {
         console.log('index.js, new message');
         io.emit('new message', {
           username: socket.username,
+          usernumber: socket.usernumber,
           message: data
         });
       });
@@ -38,6 +39,7 @@ var App = (function() {
         console.log('index.js, add user');
         // Store the usernmae in the socket session for this client
         socket.username = username;
+        socket.usernumber = userCount;
         // Add the username to the global list
         usernames[username] = username;
         userCount++;
