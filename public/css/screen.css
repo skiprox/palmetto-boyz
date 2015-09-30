@@ -38,6 +38,9 @@ table {
   border-spacing: 0;
 }
 
+/*****************
+*     FONTS
+*****************/
 /********************
 *
 *    LOGIN FORM
@@ -51,6 +54,7 @@ table {
   left: 0;
   z-index: 1;
   background-color: #333745;
+  font-weight: 900;
 }
 .login__wrapper {
   width: 90%;
@@ -106,20 +110,20 @@ img {
 .message {
   padding: 0.4em 0.8em 0;
   line-height: 1.5;
-  font-weight: 100;
+  font-weight: 400;
 }
 .message.notification {
   text-align: center;
   color: #999;
   font-size: 16px;
-  font-weight: 100;
+  font-weight: 200;
 }
 .message.notification--total-number {
   padding-top: 0;
 }
 
 .user {
-  font-weight: bold;
+  font-weight: 900;
   padding-right: 10px;
 }
 
@@ -170,7 +174,7 @@ img {
   }
 }
 body {
-  font-family: helvetica, sans-serif;
+  font-family: "ff-dagny-web-pro", helvetica, sans-serif;
 }
 
 /*# sourceMappingURL=screen.css.map */

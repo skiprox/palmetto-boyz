@@ -20,19 +20,19 @@ img {
 .message {
   padding: 0.4em 0.8em 0;
   line-height: 1.5;
-  font-weight: 100;
+  font-weight: map-get($font-weight, normal);
   &.notification {
     text-align:center;
     color: #999;
     font-size: 16px;
-    font-weight: 100;
+    font-weight: map-get($font-weight, light);
     &--total-number {
       padding-top: 0;
     }
   }
 }
 .user {
-  font-weight: bold;
+  font-weight: map-get($font-weight, black);
   padding-right: 10px;
 }
 
