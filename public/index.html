@@ -14,11 +14,16 @@
 			<input type="text" id="login-input" class="login__username" autocomplete="off">
 		</div>
 	</form>
-	<ul id="messages" class="message-list"></ul>
-	<form id="chat-form" action="" class="form">
-		<input type="text" id="chat-input" class="form__input" autocomplete="off">
-		<button class="form__button">Send</button>
-	</form>
+	<div id="sidebar" class="sidebar">
+		<ul id="sidebar-people" class="sidebar__people"></ul>
+	</div>
+	<div class="messages-wrapper">
+		<ul id="messages" class="message-list"></ul>
+		<form id="chat-form" action="" class="form">
+			<input type="text" id="chat-input" class="form__input" autocomplete="off">
+			<button class="form__button">Send</button>
+		</form>
+	</div>
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 	<script src="app.built.js"></script>
 </body>

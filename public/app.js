@@ -10,7 +10,9 @@ Public = (function(){
 		loginInput: null,
 		chatForm: null,
 		chatInput: null,
-		messages: null
+		messages: null,
+		sidebar: null,
+		sidebarPeople: null
 	};
 
 	// Stored DOM values
@@ -48,6 +50,8 @@ Public = (function(){
 		UI.chatForm = document.getElementById('chat-form');
 		UI.chatInput = document.getElementById('chat-input');
 		UI.messages = document.getElementById('messages');
+		UI.sidebar = document.getElementById('sidebar');
+		UI.sidebarPeople = document.getElementById('sidebar-people');
 	};
 
 	/**
@@ -74,10 +78,10 @@ Public = (function(){
 	 */
 	var _addSocketListeners = function() {
 		socket.on('user joined', function(data) {
-			groupChangeNotification(data, 'joined');
+			updateGroupUsers(data, 'joined');
 		});
 		socket.on('user left', function(data) {
-			groupChangeNotification(data, 'left');
+			updateGroupUsers(data, 'left');
 		});
 		socket.on('new message', function(data) {
 			addChatMessage(data);
@@ -86,13 +90,17 @@ Public = (function(){
 
 	/**
 	 * When someone leaves or enters the group, this gets called
-	 * @param  {Object} -- includes data.username and data.userCount
+	 * @param  {Object} -- includes data.username, data.usernumber, and data.userCount
 	 * @param  {String} -- either "joined" or "left", from _addSocketListeners()
 	 */
-	var groupChangeNotification = function(data, infoString) {
+	var updateGroupUsers = function(data, infoString) {
 		UI.messages.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
 		UI.messages.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
 		forceScrollToBottom();
+		UI.sidebarPeople.innerHTML = '';
+		for (var name in data.usernames) {
+			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" class="person">' + data.usernames[name] + '</li>';
+		}
 	};
 
 	/**

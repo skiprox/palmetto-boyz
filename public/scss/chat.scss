@@ -11,6 +11,25 @@ body {
 img {
   max-width:100%;
 }
+.sidebar {
+  position: fixed;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  overflow: scroll;
+  background-color: #ECF0F1;
+}
+.person {
+  font-weight: map-get($font-weight, normal);
+  padding: 10px;
+  color: #6C7491;
+  border-bottom: 1px solid #FEFEFE;
+}
+.messages-wrapper {
+  width: 80%;
+  position: absolute;
+  left: 20%;
+}
 .message-list {
   position:relative;
   margin:0 0 60px 0;
@@ -42,10 +61,10 @@ img {
 * 
 *********************/
 .form {
-  width: 100%;
+  width: 80%;
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 20%;
   background-color: #333745;
   padding: 5px;
   box-sizing: border-box;

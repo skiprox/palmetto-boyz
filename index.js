@@ -44,6 +44,8 @@ var App = (function() {
         // echo globally that a person has connected
         io.emit('user joined', {
           username: socket.username,
+          usernames: usernames,
+          usernumber: socket.usernumber,
           userCount: userCount
         });
       });
@@ -71,6 +73,8 @@ var App = (function() {
           // Echo globally that user has left
           io.emit('user left', {
             username: socket.username,
+            usernames: usernames,
+            usernumber: socket.usernumber,
             userCount: userCount
           });
         }
