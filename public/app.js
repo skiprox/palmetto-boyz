@@ -5,11 +5,17 @@ Public = (function(){
 
 	// Stored DOM elements
 	var UI = {
+		body: null,
 		loginForm: null,
 		loginInput: null,
 		chatForm: null,
 		chatInput: null,
 		messages: null
+	};
+
+	// Stored DOM values
+	var UIValues = {
+		bodyHeight: null
 	};
 
 	// Colors for users
@@ -35,6 +41,8 @@ Public = (function(){
 	 * Cache all the UI elements
 	 */
 	var _cacheElements = function() {
+		UI.body = document.body;
+		UIValues.bodyHeight = UI.body.scrollHeight;
 		UI.loginForm = document.getElementById('login-form');
 		UI.loginInput = document.getElementById('login-input');
 		UI.chatForm = document.getElementById('chat-form');
@@ -84,6 +92,7 @@ Public = (function(){
 	var groupChangeNotification = function(data, infoString) {
 		UI.messages.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
 		UI.messages.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
+		forceScrollToBottom();
 	};
 
 	/**
@@ -91,9 +100,20 @@ Public = (function(){
 	 * @param {Object} -- includes data.username and data.message
 	 */
 	var addChatMessage = function(data) {
-		var color = userColors[data.usernumber % (colorsLen)];
-		var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
-		UI.messages.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+		if (data.message != '') {
+			var color = userColors[data.usernumber % (colorsLen)];
+			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
+			UI.messages.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+			forceScrollToBottom();
+		}
+	};
+
+	/**
+	 * Force scroll to the bottom of the page
+	 */
+	var forceScrollToBottom = function() {
+		UIValues.bodyHeight = UI.body.scrollHeight;
+		window.scrollTo(0, UIValues.bodyHeight);
 	};
 
 	return {
