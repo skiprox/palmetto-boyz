@@ -60,7 +60,7 @@ img {
 *    CHAT FORM
 * 
 *********************/
-.form {
+.chat-form {
   width: 80%;
   position: fixed;
   bottom: 0;
@@ -95,7 +95,7 @@ img {
   .form__button {
     display: none;
   }
-  .form__input {
+  .chat-form__input {
     width: 100%;
   }
 }

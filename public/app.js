@@ -15,6 +15,12 @@ Public = (function(){
 		sidebarPeople: null
 	};
 
+	// Stored namespaces (i.e. rooms)
+	var NameSpaces = {
+		all: io('/'),
+		test: io('/test')
+	};
+
 	// Stored DOM values
 	var UIValues = {
 		bodyHeight: null
@@ -71,6 +77,11 @@ Public = (function(){
 			UI.chatInput.select();
 			return false;
 		});
+		UI.sidebarPeople.addEventListener('click', function(e) {
+			e.preventDefault();
+			addNewChatroom(e.target.id);
+			return false;
+		});
 	};
 
 	/**
@@ -83,7 +94,16 @@ Public = (function(){
 		socket.on('user left', function(data) {
 			updateGroupUsers(data, 'left');
 		});
-		socket.on('new message', function(data) {
+		// socket.on('new message', function(data) {
+		// 	addChatMessage(data);
+		// });
+
+		// This is an example of listening to different namespaces.
+		// Although currently the messages end up in the same place.
+		NameSpaces.all.on('new message', function(data) {
+			addChatMessage(data);
+		});
+		NameSpaces.test.on('new message', function(data) {
 			addChatMessage(data);
 		});
 	};
@@ -101,6 +121,14 @@ Public = (function(){
 		for (var name in data.usernames) {
 			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" class="person">' + data.usernames[name] + '</li>';
 		}
+	};
+
+	/**
+	 * Add a new chat room, currently when someone clicks on a name in the sidebar
+	 * @param {String} -- The name of the user you're starting a private chat with
+	 */
+	var addNewChatroom = function(name) {
+
 	};
 
 	/**

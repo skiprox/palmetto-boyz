@@ -8,6 +8,11 @@ var App = (function() {
   var usernames = {},
       userCount = 0;
 
+  var NameSpaces = {
+    all: io.of('/'),
+    test: io.of('/test')
+  };
+
   var setup = function() {
     app.set('port', process.env.PORT || 5000);
     app.use(express.static(__dirname + '/public'));
@@ -22,11 +27,23 @@ var App = (function() {
       var addedUser = false;
       // Add listener for new messages
       socket.on('new message', function(data) {
-        io.emit('new message', {
-          username: socket.username,
-          usernumber: socket.usernumber,
-          message: data
-        });
+        // This is just an example for how to post
+        // to different channels. Current on the client side
+        // these messages end up in the same place
+        if (socket.usernumber < 3) {
+          NameSpaces.all.emit('new message', {
+            username: socket.username,
+            usernumber: socket.usernumber,
+            message: data
+          });
+        }
+        else {
+          NameSpaces.test.emit('new message', {
+            username: socket.username,
+            usernumber: socket.usernumber,
+            message: data
+          });
+        }
       });
 
       // Add listener for added user

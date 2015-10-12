@@ -154,7 +154,7 @@ img {
 *    CHAT FORM
 * 
 *********************/
-.form {
+.chat-form {
   width: 80%;
   position: fixed;
   bottom: 0;
@@ -163,7 +163,7 @@ img {
   padding: 5px;
   box-sizing: border-box;
 }
-.form__input {
+.chat-form__input {
   font-size: 24px;
   width: 90%;
   display: block;
@@ -175,7 +175,7 @@ img {
   box-sizing: border-box;
   outline: none !important;
 }
-.form__button {
+.chat-form__button {
   font-size: 24px;
   width: 10%;
   display: block;
@@ -191,7 +191,7 @@ img {
     display: none;
   }
 
-  .form__input {
+  .chat-form__input {
     width: 100%;
   }
 }
