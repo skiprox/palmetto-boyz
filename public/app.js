@@ -15,12 +15,6 @@ Public = (function(){
 		sidebarPeople: null
 	};
 
-	// Stored namespaces (i.e. rooms)
-	var NameSpaces = {
-		all: io('/'),
-		test: io('/test')
-	};
-
 	// Stored DOM values
 	var UIValues = {
 		bodyHeight: null
@@ -94,16 +88,7 @@ Public = (function(){
 		socket.on('user left', function(data) {
 			updateGroupUsers(data, 'left');
 		});
-		// socket.on('new message', function(data) {
-		// 	addChatMessage(data);
-		// });
-
-		// This is an example of listening to different namespaces.
-		// Although currently the messages end up in the same place.
-		NameSpaces.all.on('new message', function(data) {
-			addChatMessage(data);
-		});
-		NameSpaces.test.on('new message', function(data) {
+		socket.on('new message', function(data) {
 			addChatMessage(data);
 		});
 	};
