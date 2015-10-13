@@ -6,6 +6,7 @@ var io = require('socket.io')(http);
 var App = (function() {
 
   var usernames = {},
+      userIds = {},
       userCount = 0;
 
   var setup = function() {
@@ -36,6 +37,7 @@ var App = (function() {
         socket.usernumber = userCount;
         // Add the username to the global list
         usernames[username] = username;
+        userIds[username] = socket.id;
         userCount++;
         addedUser = true;
         io.emit('login', {
@@ -46,7 +48,17 @@ var App = (function() {
           username: socket.username,
           usernames: usernames,
           usernumber: socket.usernumber,
+          userIds: userIds,
           userCount: userCount
+        });
+      });
+
+      socket.on('private chat', function(userId) {
+        console.log(userId);
+        socket.broadcast.to(userId).emit('new message', {
+          username: socket.username,
+          usernumber: socket.usernumber,
+          message: 'hi nerds!'
         });
       });
 

@@ -73,7 +73,7 @@ Public = (function(){
 		});
 		UI.sidebarPeople.addEventListener('click', function(e) {
 			e.preventDefault();
-			addNewChatroom(e.target.id);
+			addNewChatroom(e.target.getAttribute('data-id'));
 			return false;
 		});
 	};
@@ -104,7 +104,7 @@ Public = (function(){
 		forceScrollToBottom();
 		UI.sidebarPeople.innerHTML = '';
 		for (var name in data.usernames) {
-			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" class="person">' + data.usernames[name] + '</li>';
+			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" data-id="' + data.userIds[name] + '" class="person">' + data.usernames[name] + '</li>';
 		}
 	};
 
@@ -112,8 +112,8 @@ Public = (function(){
 	 * Add a new chat room, currently when someone clicks on a name in the sidebar
 	 * @param {String} -- The name of the user you're starting a private chat with
 	 */
-	var addNewChatroom = function(name) {
-
+	var addNewChatroom = function(userId) {
+		socket.emit('private chat', userId);
 	};
 
 	/**
