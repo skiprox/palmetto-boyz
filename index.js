@@ -53,12 +53,11 @@ var App = (function() {
         });
       });
 
-      socket.on('private chat', function(userId) {
-        console.log(userId);
-        socket.broadcast.to(userId).emit('new message', {
+      socket.on('start private chat', function(userId) {
+        socket.broadcast.to(userId).emit('start private chat', {
           username: socket.username,
           usernumber: socket.usernumber,
-          message: 'hi nerds!'
+          userId: socket.id
         });
       });
 

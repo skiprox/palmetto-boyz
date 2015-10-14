@@ -74,7 +74,14 @@ Public = (function(){
 		});
 		UI.sidebarPeople.addEventListener('click', function(e) {
 			e.preventDefault();
-			addNewChatroom(e.target.getAttribute('data-id'));
+			socket.emit('start private chat', e.target.getAttribute('data-id'));
+			console.log(e);
+			var data = {
+				username: "paul",
+				usernumber: 1,
+				userId: e.target.getAttribute('data-id')
+			}
+			openChatRoomWith(data);
 			return false;
 		});
 	};
@@ -91,6 +98,10 @@ Public = (function(){
 		});
 		socket.on('new message', function(data) {
 			addChatMessage(data);
+		});
+		socket.on('start private chat', function(data) {
+			console.log(data);
+			openChatRoomWith(data);
 		});
 	};
 
@@ -110,11 +121,11 @@ Public = (function(){
 	};
 
 	/**
-	 * Add a new chat room, currently when someone clicks on a name in the sidebar
-	 * @param {String} -- The name of the user you're starting a private chat with
+	 * Open a private chat room with a user
+	 * @param  {object} -- includes data.username, data.usernumber, and data.userId
 	 */
-	var addNewChatroom = function(userId) {
-		socket.emit('private chat', userId);
+	var openChatRoomWith = function(data) {
+		// Here we want to open up a new window, that's the same as the existing chat window but instead has a listener for 'new private message'. Then when we send a private message we want to produce it on the screen, and then ping it directly to the socket we want to see it.
 	};
 
 	/**
