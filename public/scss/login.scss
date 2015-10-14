@@ -12,6 +12,7 @@
 	z-index: 1;
 	background-color: #333745;
 	font-weight: map-get($font-weight, black);
+	z-index: 2;
 	&__wrapper {
 		width: 90%;
 		position: absolute;

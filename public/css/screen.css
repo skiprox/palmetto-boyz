@@ -55,6 +55,7 @@ table {
   z-index: 1;
   background-color: #333745;
   font-weight: 900;
+  z-index: 2;
 }
 .login__wrapper {
   width: 90%;
@@ -122,6 +123,10 @@ img {
   position: absolute;
   left: 20%;
   background-color: #FEFEFE;
+  z-index: 0;
+}
+.messages-wrapper.active {
+  z-index: 1;
 }
 
 .message-list {

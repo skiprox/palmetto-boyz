@@ -61,6 +61,16 @@ var App = (function() {
         });
       });
 
+      socket.on('new private message', function(data) {
+        if (data.userId != socket.id) {
+          socket.broadcast.to(data.userId).emit('new private message', {
+            username: data.username,
+            usernumber: data.usernumber,
+            message: data.message
+          });
+        }
+      });
+
       // Add listener for typing
       socket.on('typing', function() {
         io.emit('typing', {

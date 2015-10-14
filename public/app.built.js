@@ -11,13 +11,16 @@ Public = (function(){
 		loginInput: null,
 		sidebar: null,
 		sidebarPeople: null,
-		main: {
+		'main': {
 			chatRoom: null,
 			chatForm: null,
 			chatInput: null,
 			messagesList: null
 		}
 	};
+
+	// To keep track of the active room
+	var activeRoom = 'main';
 
 	// Stored DOM values
 	var UIValues = {
@@ -53,27 +56,27 @@ Public = (function(){
 		UI.loginInput = document.getElementById('login-input');
 		UI.sidebar = document.getElementById('sidebar');
 		UI.sidebarPeople = document.getElementById('sidebar-people');
-		UI.main.chatRoom = document.getElementById('room-main');
-		UI.main.chatForm = UI.main.chatRoom.querySelector('.chat-form');
-		UI.main.chatInput = UI.main.chatRoom.querySelector('.chat-form__input');
-		UI.main.messagesList = UI.main.chatRoom.querySelector('.message-list');
+		UI['main'].chatRoom = document.getElementById('room-main');
+		UI['main'].chatForm = UI['main'].chatRoom.querySelector('.chat-form');
+		UI['main'].chatInput = UI['main'].chatRoom.querySelector('.chat-form__input');
+		UI['main'].messagesList = UI['main'].chatRoom.querySelector('.message-list');
 	};
 
 	/**
 	 * Add dom listeners, for things like form submissions
 	 */
 	var _addDomListeners = function() {
-		UI.main.chatForm.addEventListener('submit', function(e) {
+		UI['main'].chatForm.addEventListener('submit', function(e) {
 			e.preventDefault();
-			socket.emit('new message', UI.main.chatInput.value);
-			UI.main.chatInput.value = '';
+			socket.emit('new message', UI['main'].chatInput.value);
+			UI['main'].chatInput.value = '';
 			return false;
 		});
 		UI.loginForm.addEventListener('submit', function(e) {
 			e.preventDefault();
 			socket.emit('add user', UI.loginInput.value);
 			UI.loginForm.parentNode.removeChild(UI.loginForm);
-			UI.main.chatInput.select();
+			UI['main'].chatInput.select();
 			return false;
 		});
 		UI.sidebarPeople.addEventListener('click', function(e) {
@@ -82,15 +85,6 @@ Public = (function(){
 			// Check if the chatroom defined by the userId exists,
 			// if not we create it and initiate private chat
 			if (!UI[userId]) {
-				// Create the chat room
-				UI[userId] = {};
-				UI[userId].chatRoom = UI.main.chatRoom.cloneNode(true);
-				UI[userId].chatRoom.setAttribute('id', 'room-' + userId);
-				UI[userId].chatForm = UI[userId].chatRoom.querySelector('.chat-form');
-				UI[userId].chatInput = UI[userId].chatRoom.querySelector('.chat-form__input');
-				UI[userId].messagesList = UI[userId].chatRoom.querySelector('.message-list');
-				UI[userId].messagesList.innerHTML = '';
-				UI.body.appendChild(UI[userId].chatRoom);
 				socket.emit('start private chat', e.target.getAttribute('data-id'));
 				// Need to add real data from user who clicked here
 				var data = {
@@ -99,9 +93,11 @@ Public = (function(){
 					userId: e.target.getAttribute('data-id')
 				}
 				openChatRoomWith(data);
+				changeActiveRoom(userId);
 				return false;
 			}
 			else {
+				changeActiveRoom(userId);
 				return false;
 			}
 		});
@@ -131,8 +127,8 @@ Public = (function(){
 	 * @param  {String} -- either "joined" or "left", from _addSocketListeners()
 	 */
 	var updateGroupUsers = function(data, infoString) {
-		UI.main.messagesList.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
-		UI.main.messagesList.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
+		UI['main'].messagesList.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
+		UI['main'].messagesList.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
 		forceScrollToBottom();
 		UI.sidebarPeople.innerHTML = '';
 		var i = 0;
@@ -143,11 +139,40 @@ Public = (function(){
 	};
 
 	/**
+	 * Add a new chat room based on a User ID, and append it to the DOM
+	 * @param {string} -- The userId string to name the chat room
+	 */
+	var addChatRoom = function(userId) {
+		UI[userId] = {};
+		UI[userId].chatRoom = UI['main'].chatRoom.cloneNode(true);
+		UI[userId].chatRoom.setAttribute('id', 'room-' + userId);
+		UI[userId].chatForm = UI[userId].chatRoom.querySelector('.chat-form');
+		UI[userId].chatInput = UI[userId].chatRoom.querySelector('.chat-form__input');
+		UI[userId].messagesList = UI[userId].chatRoom.querySelector('.message-list');
+		UI[userId].messagesList.innerHTML = '';
+		UI.body.appendChild(UI[userId].chatRoom);
+	};
+
+	/**
+	 * Change the active room
+	 * @param  {string} -- The string of the room object we want to change to (usually a userId, or sometimes 'main')
+	 */
+	var changeActiveRoom = function(changeTo) {
+		console.log('what the fuck', UI[activeRoom]);
+		UI[activeRoom].chatRoom.classList.remove('active');
+		activeRoom = changeTo;
+		UI[changeTo].chatRoom.classList.add('active');
+		UI[changeTo].chatInput.select();
+	};
+
+	/**
 	 * Open a private chat room with a user
 	 * @param  {object} -- includes data.username, data.usernumber, and data.userId
 	 */
 	var openChatRoomWith = function(data) {
-		// Here we want to open up a new window, that's the same as the existing chat window but instead has a listener for 'new private message'. Then when we send a private message we want to produce it on the screen, and then ping it directly to the socket we want to see it.
+		// Here we want to open up a new window, that's the same as the existing chat window but instead has a listener for 'new private message'.
+		addChatRoom(data.userId);
+		// Then when we send a private message we want to produce it on the screen, and then ping it directly to the socket we want to see it.
 	};
 
 	/**
@@ -158,7 +183,7 @@ Public = (function(){
 		if (data.message != '') {
 			var color = userColors[data.usernumber % (colorsLen)];
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
-			UI.main.messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+			UI['main'].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
 			forceScrollToBottom();
 		}
 	};
