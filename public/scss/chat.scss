@@ -27,8 +27,10 @@ img {
 }
 .messages-wrapper {
   width: 80%;
+  height: 100%;
   position: absolute;
   left: 20%;
+  background-color: #FEFEFE;
 }
 .message-list {
   position:relative;
