@@ -8,11 +8,14 @@ Public = (function(){
 		body: null,
 		loginForm: null,
 		loginInput: null,
-		chatForm: null,
-		chatInput: null,
-		messages: null,
 		sidebar: null,
-		sidebarPeople: null
+		sidebarPeople: null,
+		main: {
+			chatRoom: null,
+			chatForm: null,
+			chatInput: null,
+			messagesList: null
+		}
 	};
 
 	// Stored DOM values
@@ -47,34 +50,35 @@ Public = (function(){
 		UIValues.bodyHeight = UI.body.scrollHeight;
 		UI.loginForm = document.getElementById('login-form');
 		UI.loginInput = document.getElementById('login-input');
-		UI.chatForm = document.getElementById('chat-form');
-		UI.chatInput = document.getElementById('chat-input');
-		UI.messages = document.getElementById('messages');
 		UI.sidebar = document.getElementById('sidebar');
 		UI.sidebarPeople = document.getElementById('sidebar-people');
+		UI.main.chatRoom = document.getElementById('room-main');
+		UI.main.chatForm = UI.main.chatRoom.querySelector('.chat-form');
+		UI.main.chatInput = UI.main.chatRoom.querySelector('.chat-form__input');
+		UI.main.messagesList = UI.main.chatRoom.querySelector('.message-list');
 	};
 
 	/**
 	 * Add dom listeners, for things like form submissions
 	 */
 	var _addDomListeners = function() {
-		UI.chatForm.addEventListener('submit', function(e) {
+		UI.main.chatForm.addEventListener('submit', function(e) {
 			e.preventDefault();
-			socket.emit('new message', UI.chatInput.value);
-			UI.chatInput.value = '';
+			socket.emit('new message', UI.main.chatInput.value);
+			UI.main.chatInput.value = '';
 			return false;
 		});
 		UI.loginForm.addEventListener('submit', function(e) {
 			e.preventDefault();
 			socket.emit('add user', UI.loginInput.value);
 			UI.loginForm.parentNode.removeChild(UI.loginForm);
-			UI.chatInput.select();
+			UI.main.chatInput.select();
 			return false;
 		});
 		UI.sidebarPeople.addEventListener('click', function(e) {
 			e.preventDefault();
 			socket.emit('start private chat', e.target.getAttribute('data-id'));
-			console.log(e);
+			// Need to add real data from user who clicked here
 			var data = {
 				username: "paul",
 				usernumber: 1,
@@ -99,7 +103,6 @@ Public = (function(){
 			addChatMessage(data);
 		});
 		socket.on('start private chat', function(data) {
-			console.log(data);
 			openChatRoomWith(data);
 		});
 	};
@@ -110,8 +113,8 @@ Public = (function(){
 	 * @param  {String} -- either "joined" or "left", from _addSocketListeners()
 	 */
 	var updateGroupUsers = function(data, infoString) {
-		UI.messages.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
-		UI.messages.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
+		UI.main.messagesList.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
+		UI.main.messagesList.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
 		forceScrollToBottom();
 		UI.sidebarPeople.innerHTML = '';
 		for (var name in data.usernames) {
@@ -135,7 +138,7 @@ Public = (function(){
 		if (data.message != '') {
 			var color = userColors[data.usernumber % (colorsLen)];
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
-			UI.messages.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+			UI.main.messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
 			forceScrollToBottom();
 		}
 	};

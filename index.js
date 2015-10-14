@@ -80,12 +80,14 @@ var App = (function() {
         // remove the username from the global usernames list
         if (addedUser) {
           delete usernames[socket.username];
+          delete userIds[socket.username];
           userCount--;
           // Echo globally that user has left
           io.emit('user left', {
             username: socket.username,
             usernames: usernames,
             usernumber: socket.usernumber,
+            userIds: userIds,
             userCount: userCount
           });
         }
