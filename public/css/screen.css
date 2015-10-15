@@ -116,6 +116,9 @@ img {
   color: #6C7491;
   border-bottom: 1px solid #FEFEFE;
 }
+.person.active {
+  background-color: #FEFEFE;
+}
 
 .messages-wrapper {
   width: 80%;

@@ -92,7 +92,7 @@ Public = (function(){
 					usernumber: parseInt(e.target.getAttribute('data-usernumber'), 10),
 					userId: e.target.getAttribute('data-id')
 				}
-				openChatRoomWith(data);
+				addChatRoom(data);
 				changeActiveRoom(userId);
 				return false;
 			}
@@ -117,7 +117,10 @@ Public = (function(){
 			addChatMessage(data);
 		});
 		socket.on('start private chat', function(data) {
-			openChatRoomWith(data);
+			addChatRoom(data);
+		});
+		socket.on('new private message', function(data) {
+			addPrivateChatMessage(data);
 		});
 	};
 
@@ -131,6 +134,7 @@ Public = (function(){
 		UI['main'].messagesList.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
 		forceScrollToBottom();
 		UI.sidebarPeople.innerHTML = '';
+		UI.sidebarPeople.innerHTML += '<li id="person-main" data-id="main" data-usernumber="-1" class="person">Main Chat Room</li>';
 		var i = 0;
 		for (var name in data.usernames) {
 			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" data-id="' + data.userIds[name] + '" data-usernumber="' + i + '" class="person">' + data.usernames[name] + '</li>';
@@ -140,9 +144,10 @@ Public = (function(){
 
 	/**
 	 * Add a new chat room based on a User ID, and append it to the DOM
-	 * @param {string} -- The userId string to name the chat room
+	 * @param {object} -- Data object with data.userId, data.username, data.usernumber
 	 */
-	var addChatRoom = function(userId) {
+	var addChatRoom = function(data) {
+		var userId = data.userId;
 		UI[userId] = {};
 		UI[userId].chatRoom = UI['main'].chatRoom.cloneNode(true);
 		UI[userId].chatRoom.setAttribute('id', 'room-' + userId);
@@ -151,6 +156,14 @@ Public = (function(){
 		UI[userId].messagesList = UI[userId].chatRoom.querySelector('.message-list');
 		UI[userId].messagesList.innerHTML = '';
 		UI.body.appendChild(UI[userId].chatRoom);
+		// Add the listener for private message
+		UI[userId].chatForm.addEventListener('submit', function(e) {
+			e.preventDefault();
+			data.message = UI[userId].chatInput.value;
+			socket.emit('new private message', data);
+			UI[userId].chatInput.value = '';
+		});
+		UI[userId].messagesList.innerHTML += '<li class="message notification">Private chat with ' + data.username + '.</li>';
 	};
 
 	/**
@@ -158,21 +171,15 @@ Public = (function(){
 	 * @param  {string} -- The string of the room object we want to change to (usually a userId, or sometimes 'main')
 	 */
 	var changeActiveRoom = function(changeTo) {
-		console.log('what the fuck', UI[activeRoom]);
+		//UI.sidebar.querySelectorAll('.active').classList.remove('active');
+		if (UI.sidebar.querySelector('.active')) {
+			UI.sidebar.querySelector('.active').classList.remove('active');
+		}
+		UI.sidebar.querySelector('[data-id="' + changeTo + '"]').classList.add('active');
 		UI[activeRoom].chatRoom.classList.remove('active');
 		activeRoom = changeTo;
 		UI[changeTo].chatRoom.classList.add('active');
 		UI[changeTo].chatInput.select();
-	};
-
-	/**
-	 * Open a private chat room with a user
-	 * @param  {object} -- includes data.username, data.usernumber, and data.userId
-	 */
-	var openChatRoomWith = function(data) {
-		// Here we want to open up a new window, that's the same as the existing chat window but instead has a listener for 'new private message'.
-		addChatRoom(data.userId);
-		// Then when we send a private message we want to produce it on the screen, and then ping it directly to the socket we want to see it.
 	};
 
 	/**
@@ -184,6 +191,16 @@ Public = (function(){
 			var color = userColors[data.usernumber % (colorsLen)];
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
 			UI['main'].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+			forceScrollToBottom();
+		}
+	};
+
+	var addPrivateChatMessage = function(data) {
+		console.log(data);
+		if (data.message != '') {
+			var color = userColors[data.usernumber % (colorsLen)];
+			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
+			UI[data.userId].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
 			forceScrollToBottom();
 		}
 	};

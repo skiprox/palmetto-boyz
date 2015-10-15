@@ -24,6 +24,9 @@ img {
   padding: 10px;
   color: #6C7491;
   border-bottom: 1px solid #FEFEFE;
+  &.active {
+    background-color: #FEFEFE;
+  }
 }
 .messages-wrapper {
   width: 80%;

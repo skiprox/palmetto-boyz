@@ -62,13 +62,18 @@ var App = (function() {
       });
 
       socket.on('new private message', function(data) {
-        if (data.userId != socket.id) {
-          socket.broadcast.to(data.userId).emit('new private message', {
-            username: data.username,
-            usernumber: data.usernumber,
-            message: data.message
-          });
-        }
+        socket.emit('new private message', {
+          username: socket.username,
+          usernumber: socket.usernumber,
+          userId: data.userId,
+          message: data.message
+        });
+        socket.broadcast.to(data.userId).emit('new private message', {
+          username: socket.username,
+          usernumber: socket.usernumber,
+          userId: socket.id,
+          message: data.message
+        });
       });
 
       // Add listener for typing
