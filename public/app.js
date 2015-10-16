@@ -171,15 +171,26 @@ Public = (function(){
 	 * @param  {string} -- The string of the room object we want to change to (usually a userId, or sometimes 'main')
 	 */
 	var changeActiveRoom = function(changeTo) {
-		//UI.sidebar.querySelectorAll('.active').classList.remove('active');
+		// If there is already an active sidebar element, remove it
 		if (UI.sidebar.querySelector('.active')) {
 			UI.sidebar.querySelector('.active').classList.remove('active');
 		}
-		UI.sidebar.querySelector('[data-id="' + changeTo + '"]').classList.add('active');
-		UI[_activeRoom].chatRoom.classList.remove('active');
-		_activeRoom = changeTo;
-		UI[changeTo].chatRoom.classList.add('active');
-		UI[changeTo].chatInput.select();
+		// Change the active room in the sidebar
+		var personDidLeave = UI.sidebar.querySelector('[data-id="' + changeTo + '"]') ? false : true;
+		var sidebarQuerySelector = UI.sidebar.querySelector('[data-id="' + changeTo + '"]') ? '[data-id="' + changeTo + '"]' : '#person-main';
+		UI.sidebar.querySelector(sidebarQuerySelector).classList.add('active');
+		// Change the active chat room
+		if (personDidLeave) {
+			UI.body.removeChild(UI[_activeRoom].chatRoom);
+			delete UI[_activeRoom];
+			_activeRoom = 'main';
+		}
+		else if (!personDidLeave) {
+			UI[_activeRoom].chatRoom.classList.remove('active');
+			_activeRoom = changeTo;
+		}
+		UI[_activeRoom].chatRoom.classList.add('active');
+		UI[_activeRoom].chatInput.select();
 	};
 
 	/**
