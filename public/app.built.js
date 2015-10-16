@@ -22,6 +22,9 @@ Public = (function(){
 	// To keep track of the active room
 	var _activeRoom = 'main';
 
+	// To keep track of the notifications for messages in rooms
+	var _roomNotifications = [];
+
 	// Stored DOM values
 	var UIValues = {
 		bodyHeight: null
@@ -85,8 +88,11 @@ Public = (function(){
 			// Check if the chatroom defined by the userId exists,
 			// if not we create it and initiate private chat
 			if (!UI[userId]) {
+				// Emit that a private chat has been initiated,
+				// send to user that person wants to start the chat with
 				socket.emit('start private chat', e.target.getAttribute('data-id'));
-				// Need to add real data from user who clicked here
+				// Need to add real data from user who clicked here,
+				// to create chat room for them
 				var data = {
 					username: e.target.textContent,
 					usernumber: parseInt(e.target.getAttribute('data-usernumber'), 10),
@@ -140,6 +146,10 @@ Public = (function(){
 			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" data-id="' + data.userIds[name] + '" data-usernumber="' + i + '" class="person">' + data.usernames[name] + '</li>';
 			i++;
 		}
+		var notificationsLen = _roomNotifications.length;
+		while (notificationsLen--) {
+			UI.sidebar.querySelector('[data-id="' + _roomNotifications[notificationsLen] + '"]').classList.add('new-messages');
+		}
 		changeActiveRoom(_activeRoom);
 	};
 
@@ -152,6 +162,7 @@ Public = (function(){
 		UI[userId] = {};
 		UI[userId].chatRoom = UI['main'].chatRoom.cloneNode(true);
 		UI[userId].chatRoom.setAttribute('id', 'room-' + userId);
+		UI[userId].chatRoom.classList.remove('active');
 		UI[userId].chatForm = UI[userId].chatRoom.querySelector('.chat-form');
 		UI[userId].chatInput = UI[userId].chatRoom.querySelector('.chat-form__input');
 		UI[userId].messagesList = UI[userId].chatRoom.querySelector('.message-list');
@@ -180,6 +191,11 @@ Public = (function(){
 		var personDidLeave = UI.sidebar.querySelector('[data-id="' + changeTo + '"]') ? false : true;
 		var sidebarQuerySelector = UI.sidebar.querySelector('[data-id="' + changeTo + '"]') ? '[data-id="' + changeTo + '"]' : '#person-main';
 		UI.sidebar.querySelector(sidebarQuerySelector).classList.add('active');
+		// If the room had notifications in it, get rid of those...
+		if (_roomNotifications.indexOf(changeTo) !== -1) {
+			UI.sidebar.querySelector('[data-id="' + changeTo + '"]').classList.remove('new-messages');
+			_roomNotifications.splice(_roomNotifications.indexOf(changeTo), 1);
+		}
 		// Change the active chat room
 		if (personDidLeave) {
 			UI.body.removeChild(UI[_activeRoom].chatRoom);
@@ -196,13 +212,19 @@ Public = (function(){
 
 	/**
 	 * When someone submits a new message to the chat (private or public)
-	 * @param {Object} -- includes data.username, data.usernumber, data.userId, data.message
+	 * @param {Object} -- includes data.username, data.usernumber, data.roomId, data.message
 	 */
 	var addChatMessage = function(data) {
 		if (data.message != '') {
 			var color = userColors[data.usernumber % (colorsLen)];
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
 			UI[data.roomId].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+			// if the new message comes to a room that isn't open by the user, send a notification
+			console.log('the user ID in addChatMessage', data.roomId);
+			if (!UI.sidebar.querySelector('[data-id="' + data.roomId + '"]').classList.contains('active')) {
+				_roomNotifications.push(data.roomId);
+				UI.sidebar.querySelector('[data-id="' + data.roomId + '"]').classList.add('new-messages');
+			}
 			forceScrollToBottom();
 		}
 	};
