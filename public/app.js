@@ -19,7 +19,7 @@ Public = (function(){
 	};
 
 	// To keep track of the active room
-	var activeRoom = 'main';
+	var _activeRoom = 'main';
 
 	// Stored DOM values
 	var UIValues = {
@@ -139,6 +139,7 @@ Public = (function(){
 			UI.sidebarPeople.innerHTML += '<li id="person-' + data.usernames[name] + '" data-id="' + data.userIds[name] + '" data-usernumber="' + i + '" class="person">' + data.usernames[name] + '</li>';
 			i++;
 		}
+		changeActiveRoom(_activeRoom);
 	};
 
 	/**
@@ -175,8 +176,8 @@ Public = (function(){
 			UI.sidebar.querySelector('.active').classList.remove('active');
 		}
 		UI.sidebar.querySelector('[data-id="' + changeTo + '"]').classList.add('active');
-		UI[activeRoom].chatRoom.classList.remove('active');
-		activeRoom = changeTo;
+		UI[_activeRoom].chatRoom.classList.remove('active');
+		_activeRoom = changeTo;
 		UI[changeTo].chatRoom.classList.add('active');
 		UI[changeTo].chatInput.select();
 	};
@@ -195,7 +196,6 @@ Public = (function(){
 	};
 
 	var addPrivateChatMessage = function(data) {
-		console.log(data);
 		if (data.message != '') {
 			var color = userColors[data.usernumber % (colorsLen)];
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
