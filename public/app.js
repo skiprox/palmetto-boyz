@@ -119,7 +119,7 @@ Public = (function(){
 			addChatRoom(data);
 		});
 		socket.on('new private message', function(data) {
-			addPrivateChatMessage(data);
+			addChatMessage(data);
 		});
 	};
 
@@ -183,23 +183,14 @@ Public = (function(){
 	};
 
 	/**
-	 * When someone submits a new message to the chat
-	 * @param {Object} -- includes data.username and data.message
+	 * When someone submits a new message to the chat (private or public)
+	 * @param {Object} -- includes data.username, data.usernumber, data.userId, data.message
 	 */
 	var addChatMessage = function(data) {
 		if (data.message != '') {
 			var color = userColors[data.usernumber % (colorsLen)];
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
-			UI['main'].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
-			forceScrollToBottom();
-		}
-	};
-
-	var addPrivateChatMessage = function(data) {
-		if (data.message != '') {
-			var color = userColors[data.usernumber % (colorsLen)];
-			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
-			UI[data.userId].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
+			UI[data.roomId].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
 			forceScrollToBottom();
 		}
 	};

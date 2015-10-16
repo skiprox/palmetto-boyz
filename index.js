@@ -26,6 +26,7 @@ var App = (function() {
         io.emit('new message', {
           username: socket.username,
           usernumber: socket.usernumber,
+          roomId: 'main',
           message: data
         });
       });
@@ -65,13 +66,13 @@ var App = (function() {
         socket.emit('new private message', {
           username: socket.username,
           usernumber: socket.usernumber,
-          userId: data.userId,
+          roomId: data.userId,
           message: data.message
         });
         socket.broadcast.to(data.userId).emit('new private message', {
           username: socket.username,
           usernumber: socket.usernumber,
-          userId: socket.id,
+          roomId: socket.id,
           message: data.message
         });
       });
