@@ -50,7 +50,8 @@ var App = (function() {
           usernames: usernames,
           usernumber: socket.usernumber,
           userIds: userIds,
-          userCount: userCount
+          userCount: userCount,
+          address: socket.handshake.address
         });
       });
 
@@ -104,7 +105,8 @@ var App = (function() {
             usernames: usernames,
             usernumber: socket.usernumber,
             userIds: userIds,
-            userCount: userCount
+            userCount: userCount,
+            address: socket.handshake.address
           });
         }
       });

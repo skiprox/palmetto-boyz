@@ -135,6 +135,7 @@ Public = (function(){
 	 * @param  {String} -- either "joined" or "left", from _addSocketListeners()
 	 */
 	var updateGroupUsers = function(data, infoString) {
+		console.log('the user address', data.address);
 		UI['main'].messagesList.innerHTML += '<li class="message notification">' + data.username + ' has ' + infoString + ' the group.</li>';
 		UI['main'].messagesList.innerHTML += '<li class="message notification notification--total-number">There are now ' + data.userCount + ' users in the group.</li>';
 		forceScrollToBottom();
