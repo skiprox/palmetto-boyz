@@ -220,7 +220,6 @@ Public = (function(){
 			var messageBody = TextCombing.hasImage(data.message) ? '<img src="' + data.message + '"/>' : data.message;
 			UI[data.roomId].messagesList.innerHTML += '<li class="message"><span class="user" style="color:' + color + '">' + data.username + '</span> ' + messageBody + '</li>';
 			// if the new message comes to a room that isn't open by the user, send a notification
-			console.log('the user ID in addChatMessage', data.roomId);
 			if (!UI.sidebar.querySelector('[data-id="' + data.roomId + '"]').classList.contains('active')) {
 				_roomNotifications.push(data.roomId);
 				UI.sidebar.querySelector('[data-id="' + data.roomId + '"]').classList.add('new-messages');
