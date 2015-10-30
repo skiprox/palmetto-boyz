@@ -1,7 +1,7 @@
 var socket = io();
 var TextCombing = require('./modules/text-combing');
 
-Public = (function(){
+var Public = (function(){
 
 	// Stored DOM elements
 	var UI = {
@@ -242,6 +242,6 @@ Public = (function(){
 		}
 	};
 
-})();
+}());
 
 Public.init();
